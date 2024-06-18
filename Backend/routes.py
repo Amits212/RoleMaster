@@ -34,3 +34,26 @@ async def get_all_users():
 async def create_user(user: User):
     await create_user_in_db(user=user)
     return {"user": "User created successfully"}
+
+@router.post("/api/login")
+async def login(user: User):
+    user_in_db = await get_user_from_db(user_id=user.id)
+    if user_in_db and user_in_db['password'] == password:
+        return {"message": "Login successful"}
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+        )
+
+
+@router.post("/api/signup")
+async def sign_up(user: User):
+    user_in_db = await get_user_from_db(user_id=user.id)
+    if user_in_db:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Username already exists",
+        )
+    await create_user_in_db(user=user)
+    return {"message": "User registered successfully"}
