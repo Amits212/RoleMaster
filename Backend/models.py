@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import List
 from enum import Enum
 
-class Permission(Enum):
+class Permission(str, Enum):
     ADD_USERS = 'ADD_USERS'
     WRITE = 'WRITE'
     DELETE = 'DELETE'

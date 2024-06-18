@@ -34,4 +34,7 @@ async def get_users_from_db():
 
 
 async def create_user_in_db(user: User):
+    for role in user.roles:
+        if roles_collection.find({"id": role["id"]}):
+            return {"role": f"role with id {role['id']} already exist"}
     await users_collection.insert_one(user.dict())

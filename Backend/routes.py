@@ -2,7 +2,7 @@ from fastapi import APIRouter, Body, HTTPException
 from starlette import status
 
 from models import User, Role
-from database import create_role_in_db, get_user_from_db, get_users_from_db, create_user_in_db
+from database import create_role_in_db, get_user_from_db, get_users_from_db, create_user_in_db, get_roles_from_db
 from typing import List
 
 router = APIRouter()
