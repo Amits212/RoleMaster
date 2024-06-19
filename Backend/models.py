@@ -22,7 +22,10 @@ class User(BaseModel):
     id: int
     username: str
     password: str
-    roles: List[Role]
+    role: Role
 
     def __str__(self):
         return f"User: {self.name}"
+
+    def has_permission(self, permission: Permission) -> bool:
+        return permission in self.role.permissions

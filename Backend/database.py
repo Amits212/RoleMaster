@@ -1,5 +1,5 @@
 from typing import List
-
+from fastapi import HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from models import User, Role
@@ -30,11 +30,21 @@ async def get_user_from_db(user_id: str):
 async def get_users_from_db():
     cursor = users_collection.find({})
     users = await cursor.to_list(length=100)
-    return [User(**user) for user in users]
+    return [User(**user) for user in users] if users else []
 
 
 async def create_user_in_db(user: User):
-    for role in user.roles:
-        if roles_collection.find({"id": role["id"]}):
-            return {"role": f"role with id {role['id']} already exist"}
     await users_collection.insert_one(user.dict())
+
+
+async def update_user_in_db(user_id: str, user: User):
+    result = await users_collection.update_one({"id": user_id}, {"$set": user.dict()})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    return result
+
+async def delete_user_from_db(user_id: str):
+    result = await users_collection.delete_one({"id": user_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    return result

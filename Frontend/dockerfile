@@ -4,11 +4,8 @@ WORKDIR /app
 
 COPY Frontend .
 
-# Install http-server (a simple Node.js server for serving static files)
 RUN npm install -g http-server
 
-# Expose port 80
 EXPOSE 80
 
-# Start the server
 CMD ["http-server", "."]
